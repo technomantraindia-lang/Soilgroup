@@ -1,0 +1,110 @@
+/* ============================================
+   TOPBAR STYLES
+   ============================================ */
+
+.topbar {
+  background-color: #1B5E20;
+  color: white;
+  padding: 10px 0;
+  font-size: 14px;
+  overflow: hidden;
+}
+
+.topbar-container {
+  position: relative;
+  display: flex;
+}
+
+.topbar-marquee {
+  display: flex;
+  white-space: nowrap;
+  animation: marquee 30s linear infinite;
+}
+
+.topbar-item {
+  display: flex;
+  align-items: center;
+  margin: 0 24px;
+}
+
+.topbar-item svg {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.topbar-divider {
+  margin: 0 24px;
+  color: #86efac;
+}
+
+.topbar-cta {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(to left, #1B5E20 70%, transparent);
+  padding-left: 48px;
+  padding-right: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.topbar-cta span {
+  color: #FBBF24;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .topbar {
+    padding: 8px 0;
+    font-size: 12px;
+  }
+
+  .topbar-item {
+    margin: 0 16px;
+  }
+
+  .topbar-item svg {
+    width: 14px;
+    height: 14px;
+    margin-right: 6px;
+  }
+
+  .topbar-divider {
+    margin: 0 16px;
+  }
+
+  .topbar-cta span {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar {
+    padding: 6px 0;
+    font-size: 11px;
+  }
+
+  .topbar-item {
+    margin: 0 12px;
+  }
+
+  .topbar-cta {
+    display: none;
+  }
+}

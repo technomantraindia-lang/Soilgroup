@@ -1,0 +1,20 @@
+/* ============================================
+   HERO SECTION STYLES
+   ============================================ */
+
+.hero {
+  width: 100%;
+  line-height: 0;
+  overflow: hidden;
+}
+
+.hero-video {
+  width: 100%;
+  height: auto;        /* height follows video's natural ratio — no bars, no cropping */
+  display: block;
+  image-rendering: high-quality;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}

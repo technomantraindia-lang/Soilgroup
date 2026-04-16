@@ -1,0 +1,352 @@
+/* ============================================
+   BUILT FOR GROWERS SECTION STYLES
+   ============================================ */
+
+.built-for-growers {
+  padding: 120px 0;
+  background: linear-gradient(180deg, #f9fafb 0%, #f0fdf4 50%, #f9fafb 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.built-for-growers-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0);
+  background-size: 40px 40px;
+  opacity: 0.5;
+}
+
+.built-for-growers-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 10;
+}
+
+/* ============================================
+   SECTION HEADER
+   ============================================ */
+
+.built-for-growers-header {
+  text-align: center;
+  margin-bottom: 70px;
+}
+
+.built-for-growers-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: white;
+  color: #1B5E20;
+  padding: 10px 24px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.built-for-growers-badge svg {
+  color: #22c55e;
+}
+
+.built-for-growers-title {
+  font-family: 'Nunito', sans-serif;
+  font-size: 38px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .built-for-growers-title {
+    font-size: 48px;
+  }
+}
+
+.built-for-growers-title .highlight {
+  color: #1B5E20;
+}
+
+.built-for-growers-subtitle {
+  color: #6b7280;
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+/* ============================================
+   FEATURES GRID
+   ============================================ */
+
+.built-for-growers-grid {
+  display: grid;
+  gap: 24px;
+}
+
+@media (min-width: 640px) {
+  .built-for-growers-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .built-for-growers-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ============================================
+   FEATURE CARD
+   ============================================ */
+
+.grower-feature-card {
+  background: white;
+  border-radius: 24px;
+  padding: 40px 28px;
+  text-align: center;
+  border: 1px solid #e5e7eb;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.grower-feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #22c55e, #1B5E20);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+
+.grower-feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+  border-color: #bbf7d0;
+}
+
+.grower-feature-card:hover::before {
+  transform: scaleX(1);
+}
+
+/* ============================================
+   FEATURE ICON
+   ============================================ */
+
+.grower-feature-icon-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.grower-feature-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1B5E20;
+  position: relative;
+  z-index: 2;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 30px rgba(34, 197, 94, 0.15);
+}
+
+.grower-feature-icon-ring {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border: 2px dashed #bbf7d0;
+  border-radius: 24px;
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+
+.grower-feature-card:hover .grower-feature-icon {
+  transform: scale(1.1) rotate(5deg);
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  box-shadow: 0 15px 40px rgba(34, 197, 94, 0.25);
+}
+
+.grower-feature-card:hover .grower-feature-icon-ring {
+  opacity: 1;
+  animation: spinRing 8s linear infinite;
+}
+
+@keyframes spinRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Icon bounce animation on hover */
+.grower-feature-card:hover .grower-feature-icon svg {
+  animation: iconBounce 0.6s ease;
+}
+
+@keyframes iconBounce {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-8px); }
+  50% { transform: translateY(0); }
+  75% { transform: translateY(-4px); }
+}
+
+/* ============================================
+   FEATURE TEXT
+   ============================================ */
+
+.grower-feature-title {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  color: #111827;
+  margin-bottom: 14px;
+  transition: color 0.3s ease;
+}
+
+.grower-feature-card:hover .grower-feature-title {
+  color: #1B5E20;
+}
+
+.grower-feature-description {
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* ============================================
+   HOVER INDICATOR
+   ============================================ */
+
+.grower-feature-indicator {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.grower-feature-indicator span {
+  display: block;
+  width: 40px;
+  height: 4px;
+  background: linear-gradient(90deg, #22c55e, #1B5E20);
+  border-radius: 9999px;
+}
+
+.grower-feature-card:hover .grower-feature-indicator {
+  opacity: 1;
+  bottom: 24px;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  .built-for-growers {
+    padding: 80px 0;
+  }
+
+  .built-for-growers-header {
+    margin-bottom: 50px;
+  }
+
+  .grower-feature-card {
+    padding: 32px 24px;
+  }
+
+  .grower-feature-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .grower-feature-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .built-for-growers-title {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .built-for-growers {
+    padding: 56px 0;
+  }
+
+  .built-for-growers-header {
+    margin-bottom: 36px;
+  }
+
+  .built-for-growers-title {
+    font-size: 26px;
+  }
+
+  .built-for-growers-subtitle {
+    font-size: 15px;
+  }
+
+  .grower-feature-card {
+    padding: 24px 18px;
+  }
+
+  .grower-feature-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .grower-feature-title {
+    font-size: 17px;
+  }
+
+  .grower-feature-description {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 360px) {
+  .built-for-growers {
+    padding: 48px 0;
+  }
+
+  .built-for-growers-title {
+    font-size: 22px;
+  }
+
+  .built-for-growers-badge {
+    padding: 8px 16px;
+    font-size: 11px;
+  }
+
+  .grower-feature-card {
+    padding: 20px 16px;
+  }
+}

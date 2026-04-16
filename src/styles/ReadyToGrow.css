@@ -1,0 +1,492 @@
+/* ============================================
+   READY TO GROW SECTION STYLES
+   ============================================ */
+
+.ready-to-grow {
+  position: relative;
+  padding: 120px 0;
+  overflow: hidden;
+}
+
+/* ============================================
+   BACKGROUND
+   ============================================ */
+
+.ready-to-grow-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.ready-to-grow-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ready-to-grow-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(17, 24, 39, 0.9) 0%,
+    rgba(17, 24, 39, 0.75) 50%,
+    rgba(17, 24, 39, 0.65) 100%
+  );
+}
+
+/* ============================================
+   FLOATING ELEMENTS
+   ============================================ */
+
+.ready-to-grow-floats {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.float-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(74, 222, 128, 0.15) 0%, transparent 70%);
+}
+
+.float-1 {
+  width: 400px;
+  height: 400px;
+  top: -100px;
+  left: -100px;
+  animation: floatMove 15s ease-in-out infinite;
+}
+
+.float-2 {
+  width: 300px;
+  height: 300px;
+  bottom: -50px;
+  right: 20%;
+  animation: floatMove 12s ease-in-out infinite reverse;
+}
+
+.float-3 {
+  width: 200px;
+  height: 200px;
+  top: 30%;
+  right: -50px;
+  animation: floatMove 10s ease-in-out infinite 2s;
+}
+
+@keyframes floatMove {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(20px, -20px); }
+  50% { transform: translate(-10px, 20px); }
+  75% { transform: translate(15px, 10px); }
+}
+
+/* ============================================
+   CONTAINER
+   ============================================ */
+
+.ready-to-grow-container {
+  position: relative;
+  z-index: 10;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.ready-to-grow-grid {
+  display: grid;
+  gap: 60px;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .ready-to-grow-grid {
+    grid-template-columns: 1.2fr 1fr;
+    gap: 100px;
+  }
+}
+
+/* ============================================
+   LEFT CONTENT
+   ============================================ */
+
+.ready-to-grow-content {
+  color: white;
+}
+
+.ready-to-grow-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(74, 222, 128, 0.15);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  color: #4ADE80;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 28px;
+}
+
+.ready-to-grow-badge svg {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.2); }
+}
+
+.ready-to-grow-title {
+  font-family: 'Nunito', sans-serif;
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 24px;
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .ready-to-grow-title {
+    font-size: 56px;
+  }
+}
+
+.ready-to-grow-title .highlight {
+  color: #4ADE80;
+  position: relative;
+}
+
+.ready-to-grow-title .highlight::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #4ADE80, transparent);
+  border-radius: 2px;
+}
+
+.ready-to-grow-description {
+  font-size: 18px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 500px;
+  margin-bottom: 40px;
+}
+
+/* ============================================
+   TRUST INDICATORS
+   ============================================ */
+
+.ready-to-grow-trust {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.trust-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.trust-value {
+  font-family: 'Nunito', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #4ADE80;
+}
+
+.trust-label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+}
+
+.trust-divider {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+}
+
+/* ============================================
+   RIGHT CARD
+   ============================================ */
+
+.ready-to-grow-card {
+  position: relative;
+  border-radius: 28px;
+  overflow: hidden;
+}
+
+.ready-to-grow-card-glow {
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.4), transparent, rgba(74, 222, 128, 0.2));
+  border-radius: 30px;
+  z-index: 1;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.ready-to-grow-card-content {
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  padding: 44px;
+}
+
+/* ============================================
+   BENEFITS LIST
+   ============================================ */
+
+.ready-to-grow-benefits {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 36px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.ready-to-grow-benefit {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  animation: fadeInLeft 0.5s ease-out both;
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.benefit-dot {
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(135deg, #4ADE80, #22c55e);
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 15px rgba(74, 222, 128, 0.6);
+  position: relative;
+}
+
+.benefit-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  border-radius: 50%;
+}
+
+/* ============================================
+   CTA BUTTON
+   ============================================ */
+
+.ready-to-grow-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #4ADE80 0%, #22c55e 100%);
+  color: #111827;
+  padding: 20px 36px;
+  border-radius: 14px;
+  font-size: 17px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 15px 40px rgba(74, 222, 128, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.ready-to-grow-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.ready-to-grow-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(74, 222, 128, 0.45);
+}
+
+.ready-to-grow-btn:hover::before {
+  left: 100%;
+}
+
+.ready-to-grow-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.ready-to-grow-btn:hover svg {
+  transform: translateX(6px);
+}
+
+/* ============================================
+   PRIVACY TEXT
+   ============================================ */
+
+.ready-to-grow-privacy {
+  text-align: center;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 20px;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .ready-to-grow {
+    padding: 80px 0;
+  }
+  
+  .ready-to-grow-grid {
+    gap: 50px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ready-to-grow {
+    padding: 60px 0;
+  }
+  
+  .ready-to-grow-title {
+    font-size: 36px;
+  }
+  
+  .ready-to-grow-description {
+    font-size: 16px;
+  }
+  
+  .ready-to-grow-trust {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .trust-divider {
+    display: none;
+  }
+  
+  .trust-item {
+    flex: 1;
+    min-width: 80px;
+    align-items: center;
+  }
+  
+  .ready-to-grow-card-content {
+    padding: 32px 24px;
+  }
+  
+  .ready-to-grow-benefit {
+    font-size: 15px;
+  }
+  
+  .ready-to-grow-btn {
+    padding: 18px 28px;
+    font-size: 16px;
+  }
+  
+  .float-1, .float-2, .float-3 {
+    display: none;
+    animation: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .ready-to-grow {
+    padding: 48px 0;
+  }
+
+  .ready-to-grow-title {
+    font-size: 28px;
+  }
+
+  .ready-to-grow-description {
+    font-size: 15px;
+  }
+
+  .ready-to-grow-card-content {
+    padding: 24px 18px;
+  }
+
+  .ready-to-grow-btn {
+    padding: 16px 24px;
+    font-size: 15px;
+  }
+
+  .trust-value {
+    font-size: 20px;
+  }
+
+  .trust-label {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .ready-to-grow {
+    padding: 40px 0;
+  }
+
+  .ready-to-grow-title {
+    font-size: 22px;
+  }
+
+  .ready-to-grow-badge {
+    font-size: 10px;
+    padding: 8px 14px;
+  }
+
+  .ready-to-grow-card-content {
+    padding: 20px 14px;
+  }
+
+  .ready-to-grow-benefit {
+    font-size: 13px;
+    gap: 12px;
+  }
+
+  .ready-to-grow-benefits {
+    gap: 16px;
+  }
+
+  .ready-to-grow-btn {
+    padding: 14px 20px;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,57 @@
+/* ============================================
+   CATEGORY TAGS STYLES
+   ============================================ */
+
+.category-tags {
+  background-color: white;
+  padding: 24px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.category-tags-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.category-tags-scroll {
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  gap: 12px;
+  padding: 4px 4px 8px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.category-tags-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.category-tag {
+  padding: 10px 16px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.category-tag.active {
+  background-color: #1B5E20;
+  color: white;
+}
+
+.category-tag.inactive {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.category-tag.inactive:hover {
+  background-color: #e5e7eb;
+}

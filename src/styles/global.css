@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   GLOBAL STYLES
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background-color: #ffffff;
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.font-display {
+  font-family: 'Nunito', sans-serif;
+}
+
+/* ============================================
+   SCROLLBAR STYLES
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1B5E20;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0D3B0F;
+}
+
+/* ============================================
+   BUTTON STYLES
+   ============================================ */
+
+.btn-primary {
+  @apply bg-[#1B5E20] text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300;
+}
+
+.btn-primary:hover {
+  @apply bg-[#0D3B0F] shadow-lg;
+}
+
+.btn-primary:focus-visible {
+  @apply outline-2 outline-offset-2 outline-[#1B5E20];
+}
+
+.btn-secondary {
+  @apply bg-white text-[#1B5E20] border-2 border-[#1B5E20] px-6 py-3 rounded-lg font-semibold transition-all duration-300;
+}
+
+.btn-secondary:hover {
+  @apply bg-[#1B5E20] text-white;
+}
+
+.btn-secondary:focus-visible {
+  @apply outline-2 outline-offset-2 outline-[#1B5E20];
+}
+
+/* ============================================
+   FORM STYLES
+   ============================================ */
+
+input:focus,
+textarea:focus,
+select:focus {
+  @apply outline-none ring-2 ring-[#1B5E20] ring-opacity-50;
+}
+
+input[type="checkbox"] {
+  accent-color: #1B5E20;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.tags-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tags-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+#hero-section,
+#product-categories,
+#shop-by-goal,
+#testimonials,
+#brand-story,
+#vision-mission,
+#why-choose-us,
+#contact-form,
+#export-enquiry,
+#call-whatsapp-cta,
+#about-us,
+#why-us,
+#vision {
+  scroll-margin-top: 170px;
+}
+
+@media (max-width: 1023px) {
+  #hero-section,
+  #product-categories,
+  #shop-by-goal,
+  #testimonials,
+  #brand-story,
+  #vision-mission,
+  #why-choose-us,
+  #contact-form,
+  #export-enquiry,
+  #call-whatsapp-cta,
+  #about-us,
+  #why-us,
+  #vision {
+    scroll-margin-top: 120px;
+  }
+}
+
+@media (max-width: 767px) {
+  #hero-section,
+  #product-categories,
+  #shop-by-goal,
+  #testimonials,
+  #brand-story,
+  #vision-mission,
+  #why-choose-us,
+  #contact-form,
+  #export-enquiry,
+  #call-whatsapp-cta,
+  #about-us,
+  #why-us,
+  #vision {
+    scroll-margin-top: 80px;
+  }
+}
