@@ -4,9 +4,17 @@ import TopBar from '../components/TopBar'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import ProductCard from '../components/ProductCard'
-import { fetchPublicProductsByCategory } from '../services/catalogApi'
+import { fetchPublicCategories, fetchPublicProductsByCategory } from '../services/catalogApi'
 import { getCategoryConfig, getCategoryProducts, resolveCategorySlug } from '../data/catalog'
 import '../styles/CategoryPage.css'
+
+function getTitleFromSlug(value) {
+  return String(value || '')
+    .split('-')
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ')
+}
 
 const CategoryPage = () => {
   const { slug } = useParams()
@@ -14,18 +22,42 @@ const CategoryPage = () => {
   const searchTerm = (searchParams.get('search') || '').trim()
 
   const [allProducts, setAllProducts] = useState([])
+  const [apiCategoryMeta, setApiCategoryMeta] = useState(null)
   const [loading, setLoading] = useState(true)
 
   const canonicalSlug = resolveCategorySlug(slug)
-  const localCategory = getCategoryConfig(slug)
+  const localCategory = getCategoryConfig(canonicalSlug)
+  const displayCategory =
+    localCategory ||
+    apiCategoryMeta || {
+      title: getTitleFromSlug(canonicalSlug) || 'Category',
+      bannerLabel: getTitleFromSlug(canonicalSlug) || 'Category',
+      banner: null,
+      description: '',
+    }
 
   useEffect(() => {
     const loadData = async () => {
       setLoading(true)
+      setApiCategoryMeta(null)
 
       try {
-        const products = await fetchPublicProductsByCategory(canonicalSlug)
+        const [products, categories] = await Promise.all([
+          fetchPublicProductsByCategory(canonicalSlug),
+          fetchPublicCategories(),
+        ])
+
+        const matchedCategory = categories.find((category) => category.slug === canonicalSlug)
+
         setAllProducts(products)
+        if (matchedCategory) {
+          setApiCategoryMeta({
+            title: matchedCategory.title || matchedCategory.name || getTitleFromSlug(canonicalSlug),
+            bannerLabel: matchedCategory.bannerLabel || matchedCategory.title || matchedCategory.name,
+            banner: matchedCategory.banner || null,
+            description: matchedCategory.description || '',
+          })
+        }
       } catch {
         setAllProducts(getCategoryProducts(canonicalSlug))
       } finally {
@@ -42,20 +74,6 @@ const CategoryPage = () => {
         <TopBar />
         <Header />
         <div className="cat-not-found"><h2>Loading...</h2></div>
-        <Footer />
-      </div>
-    )
-  }
-
-  if (!localCategory) {
-    return (
-      <div className="min-h-screen bg-white">
-        <TopBar />
-        <Header />
-        <div className="cat-not-found">
-          <h2>Category not found</h2>
-          <Link to="/" className="cat-back-link">Back to Home</Link>
-        </div>
         <Footer />
       </div>
     )
@@ -84,17 +102,17 @@ const CategoryPage = () => {
       <Header />
 
       <div className="cat-banner">
-        {localCategory.banner && (
+        {displayCategory.banner && (
           <img
-            src={localCategory.banner}
-            alt={localCategory.title}
+            src={displayCategory.banner}
+            alt={displayCategory.title}
             className="cat-banner-img"
             loading="eager"
           />
         )}
         <div className="cat-banner-overlay">
           <div className="cat-banner-box">
-            <span>{localCategory.bannerLabel || localCategory.title}</span>
+            <span>{displayCategory.bannerLabel || displayCategory.title}</span>
           </div>
         </div>
       </div>
@@ -105,7 +123,7 @@ const CategoryPage = () => {
             <div className="cat-coming-soon">
               <div className="cat-coming-soon-icon">New</div>
               <h3>Products Coming Soon</h3>
-              <p>We are currently updating our {localCategory.title} range. Please check back soon or send us an enquiry.</p>
+              <p>We are currently updating our {displayCategory.title} range. Please check back soon or send us an enquiry.</p>
               <Link to="/enquiry" className="cat-enquire-btn">Send Enquiry</Link>
             </div>
           ) : hasMatches ? (
@@ -120,7 +138,7 @@ const CategoryPage = () => {
                 <div className="cat-related-block">
                   <div className="cat-related-header">
                     <h3>Related Products In This Category</h3>
-                    <p>These products are also part of the {localCategory.title} range.</p>
+                    <p>These products are also part of the {displayCategory.title} range.</p>
                   </div>
                   <div className="cat-grid">
                     {relatedProducts.map((product, i) => (
@@ -134,7 +152,7 @@ const CategoryPage = () => {
             <>
               <div className="cat-empty-state">
                 <h3>No product found for "{searchTerm}"</h3>
-                <p>Try a different keyword, or explore these related products from {localCategory.title}.</p>
+                <p>Try a different keyword, or explore these related products from {displayCategory.title}.</p>
                 <Link to={`/category/${canonicalSlug}`} className="cat-search-clear">Show all products</Link>
               </div>
 

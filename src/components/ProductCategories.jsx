@@ -89,26 +89,75 @@ const CATEGORIES = [
   },
 ]
 
+function buildDefaultTags(title) {
+  return String(title || '')
+    .split(/\s+/)
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .slice(0, 3)
+}
+
+function mergeCategories(staticCategories, apiCategories) {
+  if (!Array.isArray(apiCategories) || apiCategories.length === 0) {
+    return staticCategories
+  }
+
+  const apiBySlug = new Map(apiCategories.map((category) => [category.slug, category]))
+
+  const mergedStatic = staticCategories.map((category) => {
+    const apiCategory = apiBySlug.get(category.slug)
+
+    if (!apiCategory) {
+      return category
+    }
+
+    return {
+      ...category,
+      title: apiCategory.title || category.title,
+      description: apiCategory.description || category.description,
+    }
+  })
+
+  const knownSlugs = new Set(staticCategories.map((category) => category.slug))
+
+  const dynamicOnly = apiCategories
+    .filter((category) => !knownSlugs.has(category.slug))
+    .map((category) => ({
+      title: category.title || category.name || 'Product Category',
+      slug: category.slug,
+      description: category.description || 'Explore products in this category.',
+      image: imgBoostPlantGrowth,
+      localCount: 0,
+      tags: buildDefaultTags(category.title || category.name),
+      isPopular: false,
+    }))
+
+  return [...mergedStatic, ...dynamicOnly]
+}
+
 const ProductCategories = () => {
+  const [categories, setCategories] = useState(CATEGORIES)
   const [counts, setCounts] = useState({})
 
   useEffect(() => {
-    const fetchCounts = async () => {
+    const fetchCategories = async () => {
       try {
-        const categories = await fetchPublicCategories()
+        const apiCategories = await fetchPublicCategories()
         const countMap = {}
 
-        categories.forEach((category) => {
+        apiCategories.forEach((category) => {
           countMap[category.slug] = Number(category.productCount || 0)
         })
 
         setCounts(countMap)
+        setCategories(mergeCategories(CATEGORIES, apiCategories))
       } catch {
         setCounts({})
+        setCategories(CATEGORIES)
       }
     }
 
-    fetchCounts()
+    fetchCategories()
   }, [])
 
   const getBadge = (category) => {
@@ -135,7 +184,7 @@ const ProductCategories = () => {
         </div>
 
         <div className="product-categories-grid">
-          {CATEGORIES.map((category, index) => {
+          {categories.map((category, index) => {
             const badge = getBadge(category)
             return (
               <div

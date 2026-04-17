@@ -510,6 +510,8 @@ function renderProducts() {
             </div>
           </div>
           <p>${escapeHtml(product.primaryUse || product.shortDescription || 'No primary use added.')}</p>
+          ${product.subtitle ? `<p><small>${escapeHtml(product.subtitle)}</small></p>` : ''}
+          ${product.overview ? `<p><small>${escapeHtml(product.overview)}</small></p>` : ''}
           <div class="pill-row">
             <span class="pill">${escapeHtml(product.category?.name || 'No category')}</span>
             <span class="status-pill ${escapeHtml(getProductStatusClass(product.status))}">${escapeHtml(formatLabel(product.status || 'draft'))}</span>
