@@ -3,11 +3,12 @@ import { generateProductSlug } from '../data/productDetails'
 
 const ProductCard = ({ product, actionLabel = 'View Product', showCategory = false }) => {
   const productSlug = product.slug || generateProductSlug(product.name)
+  const productImage = product.image || product.imageUrl || null
 
   return (
     <div className="cat-card">
       <Link to={`/product/${productSlug}`} className="cat-card-image">
-        {product.image && <img src={product.image} alt={product.name} loading="lazy" />}
+        {productImage && <img src={productImage} alt={product.name} loading="lazy" />}
       </Link>
       <div className="cat-card-body">
         {showCategory && <span className="cat-card-category">{product.categoryTitle}</span>}

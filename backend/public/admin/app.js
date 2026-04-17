@@ -29,8 +29,11 @@ const elements = {
   productSizesList: document.getElementById('productSizesList'),
   productList: document.getElementById('productList'),
   productCategorySelect: document.getElementById('productCategorySelect'),
+  productImageInput: document.getElementById('productImageInput'),
+  productImagePreview: document.getElementById('productImagePreview'),
   productSearchToggle: document.getElementById('productSearchToggle'),
   productSearchInput: document.getElementById('productSearchInput'),
+  productCountLabel: document.getElementById('productCountLabel'),
   enquiryList: document.getElementById('enquiryList'),
   filters: document.getElementById('filters'),
   viewPanels: Array.from(document.querySelectorAll('[data-view-panel]')),
@@ -149,6 +152,33 @@ function toStringArray(value) {
     .filter(Boolean)
 }
 
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onload = () => resolve(String(reader.result || ''))
+    reader.onerror = () => reject(new Error('Unable to read selected image.'))
+    reader.readAsDataURL(file)
+  })
+}
+
+function updateProductImagePreview(imageUrl) {
+  if (!elements.productImagePreview) {
+    return
+  }
+
+  const value = String(imageUrl || '').trim()
+
+  if (!value) {
+    elements.productImagePreview.src = ''
+    elements.productImagePreview.classList.add('hidden')
+    return
+  }
+
+  elements.productImagePreview.src = value
+  elements.productImagePreview.classList.remove('hidden')
+}
+
 function parseContentsRows(rawValue) {
   return String(rawValue || '')
     .split(/\r?\n/)
@@ -165,12 +195,38 @@ function parseContentsRows(rawValue) {
     .filter((row) => row.parameter && row.specification)
 }
 
+function normalizeContentsValue(contents) {
+  if (Array.isArray(contents)) {
+    return contents
+  }
+
+  const raw = String(contents || '').trim()
+
+  if (!raw) {
+    return []
+  }
+
+  try {
+    const parsed = JSON.parse(raw)
+
+    if (Array.isArray(parsed)) {
+      return parsed
+    }
+  } catch {
+    // Fall back to parsing line-by-line text.
+  }
+
+  return parseContentsRows(raw)
+}
+
 function formatContentsRows(contents) {
-  if (!Array.isArray(contents)) {
+  const normalizedContents = normalizeContentsValue(contents)
+
+  if (!Array.isArray(normalizedContents)) {
     return ''
   }
 
-  return contents
+  return normalizedContents
     .map((item) => {
       const parameter = String(item?.parameter || '').trim()
       const specification = String(item?.specification || item?.quantity || '').trim()
@@ -275,6 +331,14 @@ function syncProductSearchUi() {
 
   elements.productSearchInput.classList.toggle('hidden', !state.isProductSearchOpen)
   elements.productSearchToggle.classList.toggle('active', state.isProductSearchOpen)
+}
+
+function updateProductCountLabel() {
+  if (!elements.productCountLabel) {
+    return
+  }
+
+  elements.productCountLabel.textContent = `Products: ${state.products.length}`
 }
 
 function showLogin() {
@@ -425,6 +489,10 @@ function resetProductForm() {
   elements.productForm.reset()
   setProductSizes([])
   renderCategoryOptions()
+  updateProductImagePreview('')
+  if (elements.productImageInput) {
+    elements.productImageInput.value = ''
+  }
   elements.productSubmitButton.textContent = 'Add Product'
   elements.productCancelButton.classList.add('hidden')
 }
@@ -432,15 +500,17 @@ function resetProductForm() {
 function startProductEdit(product) {
   state.editingProductId = product.id
   const sizes = toStringArray(product.availableSizes || product.available_sizes)
+  const contentValue = product.contents || product.composition || ''
 
   elements.productForm.elements.name.value = product.name || ''
   elements.productForm.elements.slug.value = product.slug || ''
   elements.productForm.elements.categoryId.value = product.categoryId || ''
   elements.productForm.elements.primaryUse.value = product.primaryUse || product.shortDescription || ''
-  elements.productForm.elements.contentsRows.value = formatContentsRows(product.contents)
+  elements.productForm.elements.contentsRows.value = formatContentsRows(contentValue)
   elements.productForm.elements.contentsNote.value = product.contentsNote || product.description || ''
   setProductSizes(sizes)
-  elements.productForm.elements.imageUrl.value = product.imageUrl || ''
+  elements.productForm.elements.imageUrl.value = product.imageUrl || product.image || ''
+  updateProductImagePreview(elements.productForm.elements.imageUrl.value)
   elements.productForm.elements.status.value = product.status || 'draft'
   elements.productSubmitButton.textContent = 'Update Product'
   elements.productCancelButton.classList.remove('hidden')
@@ -480,6 +550,7 @@ function renderCategories() {
 
 function renderProducts() {
   renderCategoryOptions()
+  updateProductCountLabel()
 
   syncProductSearchUi()
 
@@ -706,6 +777,12 @@ async function handleProductSubmit(event) {
   const form = new FormData(elements.productForm)
   const contents = parseContentsRows(form.get('contentsRows'))
   const availableSizes = state.productFormSizes
+  const uploadedFile = elements.productImageInput?.files?.[0] || null
+  let imageUrl = String(form.get('imageUrl') || '').trim()
+
+  if (uploadedFile) {
+    imageUrl = await readFileAsDataUrl(uploadedFile)
+  }
 
   const payload = {
     name: form.get('name'),
@@ -715,7 +792,7 @@ async function handleProductSubmit(event) {
     contents,
     contentsNote: form.get('contentsNote'),
     availableSizes,
-    imageUrl: form.get('imageUrl'),
+    imageUrl,
     status: form.get('status'),
   }
 
@@ -827,6 +904,25 @@ elements.productForm.addEventListener('submit', handleProductSubmit)
 elements.categoryCancelButton.addEventListener('click', resetCategoryForm)
 elements.productCancelButton.addEventListener('click', resetProductForm)
 elements.addProductSizeButton.addEventListener('click', addProductSize)
+elements.productImageInput.addEventListener('change', async (event) => {
+  const file = event.target.files && event.target.files[0]
+
+  if (!file) {
+    updateProductImagePreview(elements.productForm.elements.imageUrl.value)
+    return
+  }
+
+  try {
+    const dataUrl = await readFileAsDataUrl(file)
+    elements.productForm.elements.imageUrl.value = dataUrl
+    updateProductImagePreview(dataUrl)
+  } catch (error) {
+    setFeedback(elements.globalFeedback, error.message, 'error')
+  }
+})
+elements.productForm.elements.imageUrl.addEventListener('input', (event) => {
+  updateProductImagePreview(event.target.value)
+})
 elements.productSizeInput.addEventListener('keydown', (event) => {
   if (event.key === 'Enter') {
     event.preventDefault()

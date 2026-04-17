@@ -198,6 +198,16 @@
                   </label>
 
                   <label class="field">
+                    <span>Image Upload</span>
+                    <input
+                      type="file"
+                      id="productImageInput"
+                      accept="image/*"
+                    />
+                    <img id="productImagePreview" class="image-preview hidden" alt="Product image preview" />
+                  </label>
+
+                  <label class="field">
                     <span>Image URL</span>
                     <input type="url" name="imageUrl" placeholder="https://example.com/product-image.jpg" />
                   </label>
@@ -229,7 +239,7 @@
                       class="search-input hidden"
                       placeholder="Search by name, slug, category, or status"
                     />
-                    <span class="muted">Manage saved products</span>
+                    <span class="muted" id="productCountLabel">Products: 0</span>
                   </div>
                 </div>
                 <div class="data-list" id="productList"></div>

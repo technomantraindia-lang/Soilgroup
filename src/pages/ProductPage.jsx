@@ -447,7 +447,7 @@ const ProductPage = () => {
   )
   const localCategory = getCategoryConfig(categorySlug)
   const categoryName = product.category?.name || localCategory?.title || localProduct?.categoryTitle || ''
-  const productImage = product.image || null
+  const productImage = product.image || product.imageUrl || null
   const bannerImage = localCategory?.banner || productImage
 
   const mapRelated = (p) => ({
