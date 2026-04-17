@@ -1,16 +1,57 @@
 ﻿import React from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import TopBar from '../components/TopBar'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import ProductCard from '../components/ProductCard'
 import { getFallbackSuggestions, getRelatedProducts, searchProducts } from '../data/catalog'
+import { searchPublicProducts } from '../services/catalogApi'
 import '../styles/CategoryPage.css'
 
 const SearchResultsPage = () => {
   const [searchParams] = useSearchParams()
   const searchTerm = (searchParams.get('search') || '').trim()
-  const matchedProducts = searchTerm ? searchProducts(searchTerm) : []
+  const [matchedProducts, setMatchedProducts] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    let isMounted = true
+
+    const loadMatches = async () => {
+      if (!searchTerm) {
+        setMatchedProducts([])
+        setLoading(false)
+        return
+      }
+
+      setLoading(true)
+      setMatchedProducts([])
+
+      try {
+        const products = await searchPublicProducts(searchTerm, 48)
+
+        if (isMounted) {
+          setMatchedProducts(products)
+        }
+      } catch {
+        if (isMounted) {
+          setMatchedProducts(searchProducts(searchTerm))
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false)
+        }
+      }
+    }
+
+    loadMatches()
+
+    return () => {
+      isMounted = false
+    }
+  }, [searchTerm])
+
   const relatedProducts = matchedProducts.length > 0
     ? getRelatedProducts(matchedProducts, {
         excludeNames: matchedProducts.map((product) => product.name),
@@ -44,7 +85,12 @@ const SearchResultsPage = () => {
             )}
           </div>
 
-          {searchTerm && matchedProducts.length > 0 ? (
+          {searchTerm && loading ? (
+            <div className="cat-empty-state">
+              <h3>Loading matching products...</h3>
+              <p>Please wait while we search the catalog.</p>
+            </div>
+          ) : searchTerm && matchedProducts.length > 0 ? (
             <div className="cat-grid">
               {matchedProducts.map((product) => (
                 <ProductCard

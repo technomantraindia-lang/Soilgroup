@@ -7,7 +7,7 @@ import {
 import EnquiryModal from '../components/EnquiryModal'
 import ProductLandingLayout from '../components/ProductLandingLayout'
 import ProductCard from '../components/ProductCard'
-import { fetchProductBySlug, fetchRelatedProducts, getAssetURL } from '../services/directus'
+import { fetchPublicProductBySlug, fetchPublicRelatedProducts } from '../services/catalogApi'
 import { getCatalogProductBySlug, getCategoryConfig, getCategoryProducts, resolveCategorySlug } from '../data/catalog'
 import { generateProductSlug, getProductBySlug } from '../data/productDetails'
 import '../styles/ProductPage.css'
@@ -345,9 +345,9 @@ const ProductPage = () => {
         let prod = null
 
         try {
-          prod = await fetchProductBySlug(slug)
+          prod = await fetchPublicProductBySlug(slug)
         } catch (error) {
-          console.error('Error loading product from Directus:', error)
+          console.error('Error loading product from backend:', error)
         }
 
         const fallback = createFallbackProduct(slug, local, catalog)
@@ -356,8 +356,8 @@ const ProductPage = () => {
         setProduct(resolvedProduct)
         setLocalProduct(local)
 
-        if (prod?.category?.id) {
-          const related = await fetchRelatedProducts(prod.category.id, slug)
+        if (prod?.category?.slug) {
+          const related = await fetchPublicRelatedProducts(prod.category.slug, slug)
           setRelatedProducts(related || [])
           return
         }
@@ -447,12 +447,12 @@ const ProductPage = () => {
   )
   const localCategory = getCategoryConfig(categorySlug)
   const categoryName = product.category?.name || localCategory?.title || localProduct?.categoryTitle || ''
-  const productImage = product.image || getAssetURL(product.product_image)
+  const productImage = product.image || null
   const bannerImage = localCategory?.banner || productImage
 
   const mapRelated = (p) => ({
     ...p,
-    image: p.image || getAssetURL(p.product_image),
+    image: p.image || null,
     categorySlug,
     categoryTitle: categoryName,
   })
@@ -792,5 +792,4 @@ const ProductPage = () => {
 }
 
 export default ProductPage
-
 

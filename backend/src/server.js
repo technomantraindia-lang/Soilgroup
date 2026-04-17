@@ -13,6 +13,7 @@ import {
   deleteEnquiry,
   deleteProduct,
   getAdminStats,
+  initializeCatalogStore,
   readCategories,
   readEnquiries,
   readProducts,
@@ -88,6 +89,16 @@ function sanitizeContents(value) {
       specification: sanitizeText(item?.specification || item?.quantity),
     }))
     .filter((row) => row.parameter && row.specification)
+}
+
+function parsePositiveInteger(value, fallback = 0, maximum = 100) {
+  const parsedValue = Number.parseInt(String(value || ''), 10)
+
+  if (!Number.isFinite(parsedValue) || parsedValue <= 0) {
+    return fallback
+  }
+
+  return Math.min(parsedValue, maximum)
 }
 
 function parseEnquiryPayload(payload) {
@@ -183,8 +194,47 @@ function enrichProducts(products, categories) {
             slug: category.slug,
           }
         : null,
-    }
+      }
   })
+}
+
+function getPublishedProducts(products) {
+  return products.filter((product) => product.status === 'published')
+}
+
+function getPublicCategories(categories, products) {
+  const productCountByCategoryId = getPublishedProducts(products).reduce((lookup, product) => {
+    lookup.set(product.categoryId, (lookup.get(product.categoryId) || 0) + 1)
+    return lookup
+  }, new Map())
+
+  return categories.map((category) => ({
+    ...category,
+    productCount: productCountByCategoryId.get(category.id) || 0,
+  }))
+}
+
+function matchesProductSearch(product, query) {
+  const normalizedQuery = sanitizeText(query).toLowerCase()
+
+  if (!normalizedQuery) {
+    return true
+  }
+
+  const searchableFields = [
+    product.name,
+    product.slug,
+    product.primaryUse,
+    product.shortDescription,
+    product.contentsNote,
+    product.description,
+    product.category?.name,
+    product.category?.slug,
+  ]
+
+  return searchableFields.some((field) =>
+    sanitizeText(field).toLowerCase().includes(normalizedQuery)
+  )
 }
 
 async function parseCategoryPayload(payload, options = {}) {
@@ -326,6 +376,8 @@ async function handleRequest(req, res) {
     sendJson(res, 200, {
       status: 'ok',
       service: 'soilgroup-backend',
+      catalogStorage: 'mongodb',
+      enquiryStorage: 'json-file',
       timestamp: new Date().toISOString(),
     })
     return
@@ -370,6 +422,87 @@ async function handleRequest(req, res) {
         token: createAuthToken(username),
         username,
       },
+    })
+    return
+  }
+
+  if (req.method === 'GET' && pathname === '/api/categories') {
+    const [categories, products] = await Promise.all([readCategories(), readProducts()])
+
+    sendJson(res, 200, {
+      data: getPublicCategories(categories, products),
+    })
+    return
+  }
+
+  const publicCategoryProductsMatch = pathname.match(/^\/api\/categories\/([^/]+)\/products$/)
+
+  if (publicCategoryProductsMatch && req.method === 'GET') {
+    const requestedCategorySlug = createSlug(publicCategoryProductsMatch[1])
+    const [products, categories] = await Promise.all([readProducts(), readCategories()])
+    const publishedProducts = enrichProducts(getPublishedProducts(products), categories).filter(
+      (product) => product.category?.slug === requestedCategorySlug
+    )
+
+    sendJson(res, 200, {
+      data: publishedProducts,
+    })
+    return
+  }
+
+  if (req.method === 'GET' && pathname === '/api/products') {
+    const [products, categories] = await Promise.all([readProducts(), readCategories()])
+    const requestedCategorySlug = createSlug(requestUrl.searchParams.get('category'))
+    const searchQuery = sanitizeText(requestUrl.searchParams.get('search'))
+    const excludeSlug = sanitizeText(requestUrl.searchParams.get('exclude'))
+    const limit = parsePositiveInteger(requestUrl.searchParams.get('limit'))
+
+    let visibleProducts = enrichProducts(getPublishedProducts(products), categories)
+
+    if (requestedCategorySlug) {
+      visibleProducts = visibleProducts.filter(
+        (product) => product.category?.slug === requestedCategorySlug
+      )
+    }
+
+    if (searchQuery) {
+      visibleProducts = visibleProducts.filter((product) =>
+        matchesProductSearch(product, searchQuery)
+      )
+    }
+
+    if (excludeSlug) {
+      visibleProducts = visibleProducts.filter((product) => product.slug !== excludeSlug)
+    }
+
+    if (limit > 0) {
+      visibleProducts = visibleProducts.slice(0, limit)
+    }
+
+    sendJson(res, 200, {
+      data: visibleProducts,
+    })
+    return
+  }
+
+  const publicProductMatch = pathname.match(/^\/api\/products\/([^/]+)$/)
+
+  if (publicProductMatch && req.method === 'GET') {
+    const [products, categories] = await Promise.all([readProducts(), readCategories()])
+    const requestedSlug = sanitizeText(publicProductMatch[1])
+    const product = enrichProducts(getPublishedProducts(products), categories).find(
+      (item) => item.slug === requestedSlug
+    )
+
+    if (!product) {
+      sendJson(res, 404, {
+        message: 'Product not found.',
+      })
+      return
+    }
+
+    sendJson(res, 200, {
+      data: product,
     })
     return
   }
@@ -622,7 +755,9 @@ async function handleRequest(req, res) {
   })
 }
 
-export function startServer() {
+export async function startServer() {
+  await initializeCatalogStore()
+
   const server = http.createServer(async (req, res) => {
     try {
       await handleRequest(req, res)
@@ -633,10 +768,24 @@ export function startServer() {
     }
   })
 
-  server.listen(config.port, () => {
-    console.log(`Soilgroup backend is running on http://localhost:${config.port}`)
-    console.log(`Admin panel: http://localhost:${config.port}/admin`)
+  await new Promise((resolve, reject) => {
+    const handleError = (error) => {
+      server.off('listening', handleListening)
+      reject(error)
+    }
+
+    const handleListening = () => {
+      server.off('error', handleError)
+      resolve()
+    }
+
+    server.once('error', handleError)
+    server.once('listening', handleListening)
+    server.listen(config.port)
   })
+
+  console.log(`Soilgroup backend is running on http://localhost:${config.port}`)
+  console.log(`Admin panel: http://localhost:${config.port}/admin`)
 
   return server
 }
@@ -645,5 +794,8 @@ const isDirectRun =
   process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href
 
 if (isDirectRun) {
-  startServer()
+  startServer().catch((error) => {
+    console.error(`Unable to start Soilgroup backend: ${error.message || error}`)
+    process.exitCode = 1
+  })
 }

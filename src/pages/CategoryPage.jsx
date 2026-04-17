@@ -4,7 +4,7 @@ import TopBar from '../components/TopBar'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import ProductCard from '../components/ProductCard'
-import { fetchProductsByCategory, getAssetURL } from '../services/directus'
+import { fetchPublicProductsByCategory } from '../services/catalogApi'
 import { getCategoryConfig, getCategoryProducts, resolveCategorySlug } from '../data/catalog'
 import '../styles/CategoryPage.css'
 
@@ -22,31 +22,19 @@ const CategoryPage = () => {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true)
+
       try {
-        const prods = await fetchProductsByCategory(slug)
-        if (prods && prods.length > 0) {
-          // Use Directus products, map image file ID to URL
-          setAllProducts(
-            prods.map((p) => ({
-              ...p,
-              image: getAssetURL(p.product_image),
-              categorySlug: canonicalSlug,
-              categoryTitle: localCategory?.title || canonicalSlug,
-            }))
-          )
-        } else {
-          // Fall back to local catalog products
-          setAllProducts(getCategoryProducts(canonicalSlug))
-        }
+        const products = await fetchPublicProductsByCategory(canonicalSlug)
+        setAllProducts(products)
       } catch {
-        // Directus unavailable — use local catalog
         setAllProducts(getCategoryProducts(canonicalSlug))
       } finally {
         setLoading(false)
       }
     }
+
     loadData()
-  }, [slug, canonicalSlug, localCategory?.title])
+  }, [canonicalSlug])
 
   if (loading) {
     return (
@@ -77,7 +65,7 @@ const CategoryPage = () => {
   const matchedProducts = searchTerm
     ? allProducts.filter((p) =>
         p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.short_description?.toLowerCase().includes(searchTerm.toLowerCase())
+        (p.short_description || p.shortDescription || '').toLowerCase().includes(searchTerm.toLowerCase())
       )
     : allProducts
 

@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Search, Phone, Menu, X, ChevronDown } from 'lucide-react'
 import logo from '../assets/logo.png'
 import { searchProducts } from '../data/catalog'
+import { searchPublicProducts } from '../services/catalogApi'
 import '../styles/Header.css'
 
 const Header = () => {
@@ -11,6 +12,7 @@ const Header = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [suggestions, setSuggestions] = useState([])
   const navigate = useNavigate()
   const location = useLocation()
   const searchRef = useRef(null)
@@ -91,7 +93,34 @@ const Header = () => {
   }, [])
 
   const trimmedSearch = searchTerm.trim()
-  const suggestions = trimmedSearch ? searchProducts(trimmedSearch).slice(0, 6) : []
+
+  useEffect(() => {
+    let isMounted = true
+
+    if (!trimmedSearch) {
+      setSuggestions([])
+      return
+    }
+
+    const timeoutId = window.setTimeout(async () => {
+      try {
+        const products = await searchPublicProducts(trimmedSearch, 6)
+
+        if (isMounted) {
+          setSuggestions(products)
+        }
+      } catch {
+        if (isMounted) {
+          setSuggestions(searchProducts(trimmedSearch).slice(0, 6))
+        }
+      }
+    }, 180)
+
+    return () => {
+      isMounted = false
+      window.clearTimeout(timeoutId)
+    }
+  }, [trimmedSearch])
 
   const handleMouseEnter = (index) => {
     setActiveDropdown(index)
@@ -296,4 +325,3 @@ const Header = () => {
 }
 
 export default Header
-

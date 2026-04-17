@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const rootDir = path.resolve(__dirname, '..')
+const projectRootDir = path.resolve(rootDir, '..')
 
 function loadEnvFile(filePath) {
   if (!fs.existsSync(filePath)) {
@@ -49,10 +50,12 @@ function splitOrigins(value) {
     .filter(Boolean)
 }
 
+loadEnvFile(path.join(projectRootDir, '.env'))
 loadEnvFile(path.join(rootDir, '.env'))
 
 export const config = {
   rootDir,
+  projectRootDir,
   publicDir: path.join(rootDir, 'public'),
   adminDir: path.join(rootDir, 'public', 'admin'),
   dataDir: path.join(rootDir, 'data'),
@@ -60,6 +63,8 @@ export const config = {
   categoriesFile: path.join(rootDir, 'data', 'categories.json'),
   productsFile: path.join(rootDir, 'data', 'products.json'),
   port: Number(process.env.PORT || 4000),
+  mongodbUri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/soilgroup_website',
+  mongodbDatabaseName: process.env.MONGODB_DATABASE || '',
   frontendOrigins: splitOrigins(
     process.env.FRONTEND_ORIGINS || 'http://localhost:5173,http://127.0.0.1:5173'
   ),

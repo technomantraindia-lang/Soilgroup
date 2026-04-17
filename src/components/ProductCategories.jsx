@@ -9,11 +9,11 @@ import imgOrganicManure from '../assets/ProductCategories/Organic Manure.jpg'
 import imgBoostPlantGrowth from '../assets/ProductCategories/Boost Plant Growth.jpg'
 import imgImproveFlowering from '../assets/Solutionbased/Improve Flowering & Fruiting.jpg'
 import imgStartYourGarden from '../assets/Solutionbased/Start Your Garden.jpg'
-import { fetchProductCountByCategory } from '../services/directus'
+import { fetchPublicCategories } from '../services/catalogApi'
 import '../styles/ProductCategories.css'
 
-// Categories whose product counts come from local catalog (already known)
-// Categories with null localCount will fetch from Directus
+// Static cards keep their visual copy and fallback counts here.
+// Live product counts are fetched from the backend catalog API when available.
 const CATEGORIES = [
   {
     title: 'Bio Fertilizers',
@@ -65,7 +65,7 @@ const CATEGORIES = [
     slug: 'chelated-micronutrients',
     description: 'Targeted micronutrient correction to prevent deficiency symptoms and improve flowering, fruit quality, and uniform growth.',
     image: imgImproveFlowering,
-    localCount: null, // fetch from Directus
+    localCount: null,
     tags: ['Zn', 'Fe', 'Micronutrients'],
     isPopular: false,
   },
@@ -74,7 +74,7 @@ const CATEGORIES = [
     slug: 'water-soluble-fertilizers',
     description: 'Fast-acting soluble nutrition for foliar spray and fertigation to support rapid growth and critical crop stages.',
     image: imgBoostPlantGrowth,
-    localCount: null, // fetch from Directus
+    localCount: null,
     tags: ['Fertigation', 'Foliar', 'Quick Uptake'],
     isPopular: false,
   },
@@ -93,29 +93,29 @@ const ProductCategories = () => {
   const [counts, setCounts] = useState({})
 
   useEffect(() => {
-    // Fetch counts only for categories where localCount is null
     const fetchCounts = async () => {
-      const dynamicCategories = CATEGORIES.filter((c) => c.localCount === null)
-      const results = await Promise.all(
-        dynamicCategories.map((c) =>
-          fetchProductCountByCategory(c.slug).then((count) => ({ slug: c.slug, count }))
-        )
-      )
-      const countMap = {}
-      results.forEach(({ slug, count }) => { countMap[slug] = count })
-      setCounts(countMap)
+      try {
+        const categories = await fetchPublicCategories()
+        const countMap = {}
+
+        categories.forEach((category) => {
+          countMap[category.slug] = Number(category.productCount || 0)
+        })
+
+        setCounts(countMap)
+      } catch {
+        setCounts({})
+      }
     }
+
     fetchCounts()
   }, [])
 
   const getBadge = (category) => {
-    if (category.localCount === 0) return { label: 'Coming Soon', type: 'coming-soon' }
-    if (category.localCount !== null) return { label: `${category.localCount}+ Products`, type: 'count' }
+    const count = counts[category.slug] ?? category.localCount ?? 0
     // dynamic — from Directus
-    const fetched = counts[category.slug]
-    if (fetched === undefined) return { label: '...', type: 'count' }
-    if (fetched === 0) return { label: 'Coming Soon', type: 'coming-soon' }
-    return { label: `${fetched}+ Products`, type: 'count' }
+    if (count === 0) return { label: 'Coming Soon', type: 'coming-soon' }
+    return { label: `${count}+ Products`, type: 'count' }
   }
 
   return (

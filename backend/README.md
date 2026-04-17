@@ -9,8 +9,9 @@ Separate backend folder for enquiry APIs and the admin panel.
 - Category management page
 - Product management page
 - Enquiry management page
-- Local JSON storage for enquiries, categories, and products
-- No external dependencies required
+- MongoDB storage for categories and products
+- Automatic first-run migration from `backend/data/categories.json` and `backend/data/products.json`
+- Local JSON storage for enquiries
 
 ## Run the backend
 
@@ -33,6 +34,15 @@ npm run backend
 
 Change these values with a `backend/.env` file based on `.env.example`.
 
+## MongoDB setup
+
+- Default connection: `mongodb://127.0.0.1:27017/soilgroup_website`
+- Configure with `MONGODB_URI`
+- Optional database override: `MONGODB_DATABASE`
+- The backend now reads both the project root `.env` and `backend/.env`, with `backend/.env` taking priority
+
+If the MongoDB collections are empty on first start, the backend imports any existing JSON catalog data and falls back to the bundled default catalog only when no existing data is found.
+
 ## Admin sections
 
 - `Dashboard`: counts and recent activity
@@ -44,6 +54,10 @@ Change these values with a `backend/.env` file based on `.env.example`.
 
 - `GET /api/health`
 - `POST /api/enquiries`
+- `GET /api/categories`
+- `GET /api/categories/:slug/products`
+- `GET /api/products`
+- `GET /api/products/:slug`
 - `POST /api/admin/login`
 - `GET /api/admin/stats`
 - `GET /api/admin/categories`

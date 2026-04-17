@@ -375,7 +375,18 @@ code {
   align-items: start;
 }
 
+.view-panel[data-view-panel="categories"] .content-grid {
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
 .view-panel[data-view-panel="products"] .content-grid > .sub-panel:first-child {
+  align-self: start;
+  width: 100%;
+  max-width: 1040px;
+}
+
+.view-panel[data-view-panel="categories"] .content-grid > .sub-panel:first-child {
   align-self: start;
   width: 100%;
   max-width: 1040px;
@@ -385,13 +396,27 @@ code {
   gap: 10px;
 }
 
+.view-panel[data-view-panel="categories"] #categoryForm {
+  gap: 10px;
+}
+
 .view-panel[data-view-panel="products"] #productForm .field input,
 .view-panel[data-view-panel="products"] #productForm .field textarea,
 .view-panel[data-view-panel="products"] #productForm .field select {
   padding: 10px 12px;
 }
 
+.view-panel[data-view-panel="categories"] #categoryForm .field input,
+.view-panel[data-view-panel="categories"] #categoryForm .field textarea,
+.view-panel[data-view-panel="categories"] #categoryForm .field select {
+  padding: 10px 12px;
+}
+
 .view-panel[data-view-panel="products"] #productForm .field textarea {
+  min-height: 78px;
+}
+
+.view-panel[data-view-panel="categories"] #categoryForm .field textarea {
   min-height: 78px;
 }
 
@@ -401,7 +426,19 @@ code {
   min-height: 0;
 }
 
+.view-panel[data-view-panel="categories"] .content-grid > .sub-panel:last-child {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
 .view-panel[data-view-panel="products"] #productList {
+  max-height: calc(100vh - 280px);
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.view-panel[data-view-panel="categories"] #categoryList {
   max-height: calc(100vh - 280px);
   overflow-y: auto;
   padding-right: 6px;
@@ -607,6 +644,12 @@ code {
     overflow-y: visible;
     padding-right: 0;
   }
+
+  .view-panel[data-view-panel="categories"] #categoryList {
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 0;
+  }
 }
 
 @media (max-width: 720px) {
@@ -666,6 +709,12 @@ code {
   }
 
   .view-panel[data-view-panel="products"] #productList {
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 0;
+  }
+
+  .view-panel[data-view-panel="categories"] #categoryList {
     max-height: none;
     overflow-y: visible;
     padding-right: 0;
