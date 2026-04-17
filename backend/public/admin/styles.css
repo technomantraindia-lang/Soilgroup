@@ -435,6 +435,7 @@ code {
 .view-panel[data-view-panel="products"] #productList {
   max-height: calc(100vh - 280px);
   overflow-y: auto;
+  overflow-x: hidden;
   padding-right: 6px;
 }
 
@@ -531,6 +532,13 @@ code {
 .item-card small,
 .recent-item small {
   color: var(--muted);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.compact-url {
+  display: inline-block;
+  max-width: 100%;
 }
 
 .pill-row {

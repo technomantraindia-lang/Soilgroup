@@ -133,6 +133,26 @@ function formatDate(value) {
   return new Date(value).toLocaleString()
 }
 
+function getCompactImageLabel(imageUrl) {
+  const value = String(imageUrl || '').trim()
+
+  if (!value) {
+    return ''
+  }
+
+  if (value.startsWith('data:image/')) {
+    const formatPart = value.slice('data:image/'.length, value.indexOf(';') > -1 ? value.indexOf(';') : undefined)
+    const readableFormat = formatPart ? formatPart.toUpperCase() : 'IMAGE'
+    return `Inline ${readableFormat} image (embedded data)`
+  }
+
+  if (value.length <= 72) {
+    return value
+  }
+
+  return `${value.slice(0, 42)}...${value.slice(-20)}`
+}
+
 function normalizeText(value) {
   return String(value || '').toLowerCase().trim()
 }
@@ -589,7 +609,7 @@ function renderProducts() {
             <span class="pill">Contents ${escapeHtml(Array.isArray(product.contents) ? product.contents.length : 0)}</span>
             <span class="pill">Sizes ${escapeHtml(toStringArray(product.availableSizes || product.available_sizes).length)}</span>
           </div>
-          ${product.imageUrl ? `<p><small>${escapeHtml(product.imageUrl)}</small></p>` : ''}
+          ${product.imageUrl ? `<p><small class="compact-url" title="${escapeHtml(product.imageUrl)}">${escapeHtml(getCompactImageLabel(product.imageUrl))}</small></p>` : ''}
         </article>
       `
     )
