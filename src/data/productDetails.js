@@ -1,0 +1,345 @@
+export function generateProductSlug(name) {
+  return name
+    .toLowerCase()
+    .replace(/\+/g, '-plus')
+    .replace(/[()]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+}
+
+const productDetails = {
+  'bio-npk': {
+    name: 'Bio NPK',
+    subtitle: 'Microbial NPK Growth Activator',
+    categorySlug: 'bio-fertilizers',
+    categoryTitle: 'Bio Fertilizers',
+
+    composition: {
+      title: 'Contents',
+      columns: ['Parameter', 'Specification'],
+      rows: [
+        ['Azospirillum', 'CFU 2 × 10⁶ cells/ml'],
+        ['Phosphate Solubilizing Bacteria (PSB)', 'CFU 2 × 10⁶ cells/ml'],
+        ['Potash Mobilizing Enzyme (KME)', 'CFU 2 × 10⁶ cells/ml'],
+      ],
+      note: 'Tri-vector microbial consortium for N, P & K availability | Bone Meal Seaweed',
+    },
+
+    whatItIs:
+      'Bio NPK is a multi-microbial biofertilizer that improves availability of Nitrogen, Phosphorus and Potassium in the root zone. Each microorganism plays a specific role:',
+    whatItIsPoints: [
+      'Azospirillum fixes atmospheric nitrogen',
+      'PSB converts insoluble phosphorus into plant-available form',
+      'KME mobilizes fixed soil potassium',
+    ],
+    whatItIsSummary:
+      'Together, they enhance root development, nutrient uptake efficiency and overall crop performance.',
+
+    keyBenefits: [
+      'Enhances early root development, leading to stronger plant establishment and higher yield',
+      'Improves efficiency of applied potassium fertilizers and optimizes water use',
+      'Increases available phosphorus levels, boosting overall plant growth',
+      'Improves crop growth, yield and produce quality',
+      'Supports sustainable nutrition by reducing dependence on chemical fertilizers',
+    ],
+
+    primaryUse:
+      'Complete biological NPK nutrition through live microbial activity',
+
+    whenToUse: [
+      'At seed treatment stage',
+      'Before transplanting',
+      'During early vegetative growth',
+      'As a basal soil application',
+    ],
+
+    crops: [
+      'Cereals & millets',
+      'Fruits & vegetables',
+      'Flowers & ornamentals',
+      'Sugarcane',
+      'Plantation and field crops',
+    ],
+
+    applicationDosage: [
+      {
+        method: 'Seed / Planting Material Treatment (Per kg)',
+        steps: [
+          'Mix 10 ml Bio NPK in cold jaggery solution',
+          'Coat seeds / planting material evenly',
+          'Shade dry and sow on the same day',
+        ],
+      },
+      {
+        method: 'Seedling Treatment',
+        steps: [
+          'Mix 10 ml Bio NPK in 1 litre water',
+          'Dip seedling roots for 5–10 minutes before transplanting',
+        ],
+      },
+      {
+        method: 'Soil Application (Per Acre)',
+        steps: [
+          'Mix 1 litre Bio NPK with 50–100 kg well-decomposed manure or cake',
+          'Apply evenly on moist soil',
+        ],
+      },
+      {
+        method: 'Drenching',
+        steps: [
+          'Mix 5–10 ml per litre of water',
+          'Apply near root zone',
+        ],
+      },
+      {
+        method: 'Fertigation (Per Acre)',
+        steps: [
+          'Mix 1–2 litres in sufficient water',
+          'Apply through drip system directly in root zone',
+        ],
+      },
+    ],
+
+    availability: ['500 ml', '1 litre', '5 litres', '500 g', '1 kg'],
+
+    dropdowns: [
+      {
+        title: 'NPK Deficiency Leads To…',
+        sections: [
+          {
+            heading: 'Nitrogen Deficiency',
+            items: [
+              'Yellowing of older leaves',
+              'Stunted vegetative growth',
+              'Poor tillering',
+              'Low biomass',
+            ],
+          },
+          {
+            heading: 'Phosphorus Deficiency',
+            items: [
+              'Purple discoloration in leaves',
+              'Poor root development',
+              'Delayed flowering',
+              'Low fruit/seed formation',
+            ],
+          },
+          {
+            heading: 'Potassium Deficiency',
+            items: [
+              'Leaf edge burning',
+              'Weak stems',
+              'Poor fruit size and quality',
+              'Increased disease susceptibility',
+            ],
+          },
+        ],
+        footer:
+          'NPK are the primary macronutrients responsible for overall plant growth, root strength, flowering, fruiting, and yield.',
+      },
+      {
+        title: 'Why Does NPK Deficiency Happen?',
+        sections: [
+          {
+            items: [
+              'Chemical fertilizers get fixed in soil (especially P & K)',
+              'Nutrient leaching in sandy soils',
+              'Low organic carbon',
+              'Imbalanced fertilizer application',
+              'Poor microbial population in soil',
+            ],
+          },
+        ],
+        footer:
+          'Even when fertilizers are applied, nutrients may remain unavailable to plants.',
+      },
+      {
+        title: 'How Soil+ Bio NPK Fixes It',
+        sections: [
+          {
+            heading: 'Bio NPK contains:',
+            items: [
+              'Azospirillum – Fixes atmospheric nitrogen',
+              'Phosphate Solubilizing Bacteria (PSB) – Converts locked phosphorus into available form',
+              'Potash Mobilizing Bacteria (KMB) – Mobilizes unavailable potassium',
+            ],
+          },
+          {
+            heading: 'Result:',
+            items: [
+              'Enhances root development',
+              'Improves nutrient uptake efficiency',
+              'Increases fertilizer use efficiency',
+              'Boosts overall plant growth',
+              'Improves yield and crop quality',
+            ],
+          },
+        ],
+        footer:
+          'Ideal for cereals, millets, fruits, vegetables, sugarcane, plantation crops, and field crops.',
+      },
+    ],
+  },
+
+  'npk-plus': {
+    name: 'NPK+',
+    subtitle: 'High Strength Organic NPK Booster',
+    categorySlug: 'organic-fertilizers',
+    categoryTitle: 'Organic Fertilizers',
+
+    composition: {
+      title: 'Contents',
+      columns: ['Parameter', 'Quantity'],
+      rows: [
+        ['Organic Carbon', '35–40 %'],
+        ['Nitrogen', '4.5–5.5 %'],
+        ['Phosphorus (P₂O₅)', '8.5–11 %'],
+        ['Potassium (K₂O)', '7.5–8 %'],
+        ['Protein', '25–30 %'],
+      ],
+    },
+
+    whatItIs:
+      'NPK+ is a high-NPK organic manure formulated from nutrient-rich cake material that supplies balanced nitrogen, phosphorus, and potassium in organic forms, along with secondary and micronutrients. It improves soil fertility, microbial activity, and crop nutrition while reducing nutrient losses and enhancing nutrient availability over time.',
+    whatItIsPoints: [],
+    whatItIsSummary: '',
+
+    keyBenefits: [
+      'Provides balanced organic NPK (≈5% N, 10% P, 8% K) to support all stages of crop growth',
+      'Improves soil fertility and productivity by adding organic carbon and essential secondary & micronutrients',
+      'Enhances leaf chlorophyll, produce taste, colour, and shelf life',
+      'Promotes loose, friable soil with better water infiltration',
+      'Reduces nutrient loss by leaching and volatilization and lowers P/K fixation in soil',
+      'Helps maintain soil pH and increases root growth',
+      'Can reduce P fixation when applied with chemical phosphatic fertilizers',
+      'Enhances microbial population and activity, especially when used with biofertilizers',
+      'Some constituents may have insecticidal properties that help protect roots from nematodes and other insects',
+    ],
+
+    primaryUse:
+      'NPK+ is primarily used as a balanced organic fertilizer that provides nitrogen, phosphorus, and potassium simultaneously, supporting overall crop growth, flowering, and yield enhancement.',
+
+    whenToUse: [
+      'Apply in soils with deficiencies in N, P, or K to provide balanced nutrition',
+      'Use during vegetative, flowering, and early fruiting stages for optimal crop performance',
+      'Ideal when aiming to boost crop growth, yield, and crop quality naturally',
+      'Apply to vegetables, fruits, cereals, pulses, and plantation crops needing a comprehensive nutrient boost',
+    ],
+
+    crops: [
+      'Vegetables',
+      'Fruits',
+      'Flowers',
+      'Cereals & millets',
+      'Pulses & oilseeds',
+      'Plantation crops',
+    ],
+
+    applicationDosage: [
+      {
+        method: 'Soil Application',
+        steps: [
+          'Apply 200–500 kg per acre at the time of sowing or planting',
+          'Can be used in 1:1 proportion with chemical fertilizers for soil application to enhance nutrient efficiency',
+        ],
+      },
+    ],
+
+    form: 'Granular / Cake-based organic manure',
+    availability: ['40 kg bag'],
+
+    dropdowns: [
+      {
+        title: 'NPK Deficiency Leads To…',
+        sections: [
+          {
+            heading: 'Nitrogen (N) Deficiency',
+            items: [
+              'Pale yellow leaves',
+              'Poor vegetative growth',
+              'Reduced leaf size',
+              'Weak plant vigor',
+            ],
+          },
+          {
+            heading: 'Phosphorus (P) Deficiency',
+            items: [
+              'Poor root system',
+              'Delayed flowering',
+              'Reduced fruit formation',
+              'Purple/reddish discoloration in leaves',
+            ],
+          },
+          {
+            heading: 'Potassium (K) Deficiency',
+            items: [
+              'Leaf margin scorching',
+              'Weak stems',
+              'Poor fruit size',
+              'Reduced shelf life',
+              'Increased susceptibility to stress',
+            ],
+          },
+        ],
+        footer:
+          'Without balanced NPK, crops cannot achieve full growth potential.',
+      },
+      {
+        title: 'Why Does NPK Imbalance Occur?',
+        sections: [
+          {
+            items: [
+              'Overdependence on single fertilizers (like urea only)',
+              'Poor soil fertility management',
+              'Continuous cropping without replenishment',
+              'Nutrient leaching due to irrigation or rainfall',
+              'Imbalanced fertilization practices',
+            ],
+          },
+        ],
+        footer:
+          'Plants may receive one nutrient in excess and lack another, reducing overall productivity.',
+      },
+      {
+        title: 'How Soil+ NPK+ Fixes It',
+        sections: [
+          {
+            items: [
+              'Provides balanced and readily available Nitrogen, Phosphorus, and Potassium',
+              'Supports vegetative growth, root development, flowering, and fruiting',
+              'Improves overall plant vigor',
+              'Enhances crop yield and quality',
+              'Suitable for field crops, vegetables, fruits, flowers, and plantation crops',
+            ],
+          },
+        ],
+        footer:
+          'High NPK ensures complete macronutrient support during critical growth stages.',
+      },
+    ],
+  },
+}
+
+export function getProductBySlug(slug) {
+  const normalizedSlug = generateProductSlug(slug)
+
+  if (productDetails[slug]) {
+    return productDetails[slug]
+  }
+
+  if (productDetails[normalizedSlug]) {
+    return productDetails[normalizedSlug]
+  }
+
+  return (
+    Object.values(productDetails).find(
+      (product) => generateProductSlug(product.slug || product.name) === normalizedSlug
+    ) || null
+  )
+}
+
+export function hasProductDetails(productName) {
+  return Boolean(getProductBySlug(productName))
+}
+
+export default productDetails

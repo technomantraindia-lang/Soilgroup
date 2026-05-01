@@ -1,0 +1,7 @@
+/* Minimal full-viewport placeholder for lazy route transitions (layout-neutral). */
+
+.route-fallback-shell {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #ffffff;
+}
